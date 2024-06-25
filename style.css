@@ -10,3 +10,8 @@ ul {
 .form-check-label {
   margin-left: 0.5rem;
 }
+
+.form-control {
+  margin-bottom: 1rem;
+  margin-right: 0;
+}

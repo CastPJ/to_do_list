@@ -1,5 +1,15 @@
 const form = document.getElementById("form-check");
 
+const btn = document.getElementById("btn");
+const input = document.getElementById("input");
+
+function createItem() {
+  const formText = input.value;
+  const id = 1;
+  addItem(formText, id);
+  id += 1;
+}
+
 function addItem(textValue, idValue) {
   // Creating checkbox
   const checkbox = document.createElement("input");
@@ -26,6 +36,4 @@ function addItem(textValue, idValue) {
   form.appendChild(div);
 }
 
-addItem("test", "1");
-addItem("test2", "2");
-addItem("test3", "3");
+btn.addEventListener("click", createItem);
