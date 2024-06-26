@@ -1,14 +1,21 @@
 const form = document.getElementById("form-check");
 const btn = document.getElementById("btn");
 const input = document.getElementById("input");
+const deleteItemsBtn = document.getElementById("delete-items");
+const clearListBtn = document.getElementById("clear-list");
+const customizeBtn = document.getElementById("customize");
 
 let id = 1;
 
 function createItem() {
   const formText = input.value;
-  addItem(formText, id);
-  id += 1;
-  input.value = ""; // Clear the input field after adding the item
+  if (formText === "") {
+    alert("Please add an item");
+  } else {
+    addItem(formText, id);
+    id += 1;
+    input.value = ""; // Clear the input field after adding the item
+  }
 }
 
 function addItem(textValue, idValue) {
@@ -38,11 +45,17 @@ function addItem(textValue, idValue) {
 }
 
 btn.addEventListener("click", createItem);
-
+input.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault(); // Prevent the form from being submitted
+    createItem();
+  }
+});
+// Changing title
 document.addEventListener("DOMContentLoaded", () => {
   const listTitle = document.getElementById("list-title");
 
-  listTitle.addEventListener("click", () => {
+  listTitle.addEventListener("dblclick", () => {
     const input = document.createElement("input");
     input.type = "text";
     input.value = listTitle.textContent;

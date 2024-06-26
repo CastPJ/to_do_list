@@ -18,6 +18,25 @@
       >
         <div class="card">
           <div class="card-body">
+            <div
+              class="btn-group"
+              role="group"
+              aria-label="Basic mixed styles example"
+            >
+              <button type="button" class="btn" id="delete-items">
+                <img src="images/x-octagon.svg" alt="X"/>
+                Delete items
+              </button>
+              <button type="button" class="btn" id="clear-list">
+                <img src="images/trash3.svg" alt="X" />
+                Clear list
+              </button>
+              <button type="button" class="btn" id="customize">
+               <img src="images/wrench.svg" alt="X" />
+               Customize
+                </svg>
+              </button>
+            </div>
             <h5 class="card-title my-2">
               <span id="list-title" class="editable" contenteditable="false"
                 >New list ...</span
@@ -31,7 +50,7 @@
                     class="form-control flex-grow-1"
                     id="input"
                   />
-                  <button type="button" class="btn btn-secondary ms-2" id="btn">
+                  <button type="button" class="btn btn-primary ms-2" id="btn">
                     Add
                   </button>
                 </div>
