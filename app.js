@@ -1,13 +1,14 @@
 const form = document.getElementById("form-check");
-
 const btn = document.getElementById("btn");
 const input = document.getElementById("input");
 
+let id = 1;
+
 function createItem() {
   const formText = input.value;
-  const id = 1;
   addItem(formText, id);
   id += 1;
+  input.value = ""; // Clear the input field after adding the item
 }
 
 function addItem(textValue, idValue) {
@@ -20,7 +21,7 @@ function addItem(textValue, idValue) {
 
   // Creating label for checkbox
   const label = document.createElement("label");
-  label.setAttribute("for", idValue);
+  label.setAttribute("for", `checkbox-${idValue}`);
   label.classList.add("form-check-label");
   label.textContent = textValue;
 
