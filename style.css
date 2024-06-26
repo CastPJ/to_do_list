@@ -6,3 +6,7 @@ ul {
   width: 30rem;
   height: 40rem;
 }
+
+.btn-group {
+  margin-left: -1rem;
+}

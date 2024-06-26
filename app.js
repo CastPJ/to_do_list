@@ -1,3 +1,5 @@
+// DOM ELEMENTS //
+
 const form = document.getElementById("form-check");
 const btn = document.getElementById("btn");
 const input = document.getElementById("input");
@@ -8,12 +10,43 @@ const customizeBtn = document.getElementById("customize");
 // CREATE ITEM //
 
 let id = 1;
+
+document.addEventListener("DOMContentLoaded", () => {
+  // CHANGE TITLE //
+  const listTitle = document.getElementById("list-title");
+  loadItemsFromLocalStorage();
+
+  listTitle.addEventListener("dblclick", () => {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = listTitle.textContent;
+    input.classList.add("form-control");
+    input.style.width = "100%";
+
+    listTitle.replaceWith(input);
+    input.focus();
+
+    input.addEventListener("blur", () => {
+      listTitle.textContent = input.value;
+      input.replaceWith(listTitle);
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        listTitle.textContent = input.value;
+        input.replaceWith(listTitle);
+      }
+    });
+  });
+});
+
 function createItem() {
   const formText = input.value;
   if (formText === "") {
     alert("Please add an item");
   } else {
     addItem(formText, id);
+    saveItemToLocalStorage(formText, id);
     id += 1;
     input.value = ""; // Clear the input field after adding the item
   }
@@ -47,41 +80,32 @@ function addItem(textValue, idValue) {
   form.appendChild(div);
 }
 
+// SAVE ITEM TO LOCAL STORAGE //
+
+function saveItemToLocalStorage(textValue, idValue) {
+  const items = JSON.parse(localStorage.getItem("todoItems")) || [];
+  items.push({ id: idValue, text: textValue });
+  localStorage.setItem("todoItems", JSON.stringify(items));
+}
+
+// LOAD ITEMS FROM LOCAL STORAGE //
+
+function loadItemsFromLocalStorage() {
+  const items = JSON.parse(localStorage.getItem("todoItems")) || [];
+  items.forEach((item) => {
+    addItem(item.text, item.id);
+    id = Math.max(id, item.id + 1);
+  });
+}
+
+// BUTTON & ENTER ON INPUT //
+
 btn.addEventListener("click", createItem);
 input.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
     event.preventDefault(); // Prevent the form from being submitted
     createItem();
   }
-});
-
-// CHANGE TITLE //
-
-document.addEventListener("DOMContentLoaded", () => {
-  const listTitle = document.getElementById("list-title");
-
-  listTitle.addEventListener("dblclick", () => {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = listTitle.textContent;
-    input.classList.add("form-control");
-    input.style.width = "100%";
-
-    listTitle.replaceWith(input);
-    input.focus();
-
-    input.addEventListener("blur", () => {
-      listTitle.textContent = input.value;
-      input.replaceWith(listTitle);
-    });
-
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        listTitle.textContent = input.value;
-        input.replaceWith(listTitle);
-      }
-    });
-  });
 });
 
 // CLEAR LIST //
@@ -91,4 +115,5 @@ clearListBtn.addEventListener("click", clearList);
 function clearList(e) {
   e.preventDefault();
   form.innerHTML = "";
+  localStorage.removeItem("todoItems");
 }
