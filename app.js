@@ -5,8 +5,9 @@ const deleteItemsBtn = document.getElementById("delete-items");
 const clearListBtn = document.getElementById("clear-list");
 const customizeBtn = document.getElementById("customize");
 
-let id = 1;
+// CREATE ITEM //
 
+let id = 1;
 function createItem() {
   const formText = input.value;
   if (formText === "") {
@@ -17,6 +18,8 @@ function createItem() {
     input.value = ""; // Clear the input field after adding the item
   }
 }
+
+// ADD ITEM TO LIST//
 
 function addItem(textValue, idValue) {
   // Creating checkbox
@@ -51,7 +54,9 @@ input.addEventListener("keydown", function (event) {
     createItem();
   }
 });
-// Changing title
+
+// CHANGE TITLE //
+
 document.addEventListener("DOMContentLoaded", () => {
   const listTitle = document.getElementById("list-title");
 
@@ -78,3 +83,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+// CLEAR LIST //
+
+clearListBtn.addEventListener("click", clearList);
+
+function clearList(e) {
+  e.preventDefault();
+  form.innerHTML = "";
+}
