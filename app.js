@@ -38,3 +38,30 @@ function addItem(textValue, idValue) {
 }
 
 btn.addEventListener("click", createItem);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const listTitle = document.getElementById("list-title");
+
+  listTitle.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = listTitle.textContent;
+    input.classList.add("form-control");
+    input.style.width = "100%";
+
+    listTitle.replaceWith(input);
+    input.focus();
+
+    input.addEventListener("blur", () => {
+      listTitle.textContent = input.value;
+      input.replaceWith(listTitle);
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        listTitle.textContent = input.value;
+        input.replaceWith(listTitle);
+      }
+    });
+  });
+});
