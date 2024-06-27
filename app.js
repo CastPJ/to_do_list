@@ -4,6 +4,7 @@ const form = document.getElementById("form-check");
 const btn = document.getElementById("btn");
 const input = document.getElementById("input");
 const clearListBtn = document.getElementById("clear-list");
+const deleteDoneBtn = document.getElementById("delete-done");
 const listTitle = document.getElementById("list-title");
 
 // CREATE ITEM //
@@ -152,5 +153,30 @@ function clearList(e) {
   if (confirm("Are you sure?")) {
     form.innerHTML = "";
     localStorage.removeItem("todoItems");
+  }
+}
+
+// Delete done //
+
+deleteDoneBtn.addEventListener("click", deleteDone);
+
+function deleteDone(e) {
+  e.preventDefault();
+  if (confirm("Are you sure?")) {
+    const items = JSON.parse(localStorage.getItem("todoItems")) || [];
+    const updatedItems = items.filter((item) => !item.checked);
+
+    // Remove checked items from DOM
+    items.forEach((item) => {
+      if (item.checked) {
+        const checkbox = document.getElementById(`checkbox-${item.id}`);
+        if (checkbox) {
+          form.removeChild(checkbox.parentElement);
+        }
+      }
+    });
+
+    // Update local storage
+    localStorage.setItem("todoItems", JSON.stringify(updatedItems));
   }
 }
