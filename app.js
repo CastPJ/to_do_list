@@ -3,9 +3,7 @@
 const form = document.getElementById("form-check");
 const btn = document.getElementById("btn");
 const input = document.getElementById("input");
-const deleteItemsBtn = document.getElementById("delete-items");
 const clearListBtn = document.getElementById("clear-list");
-const customizeBtn = document.getElementById("customize");
 const listTitle = document.getElementById("list-title");
 
 // CREATE ITEM //
@@ -14,7 +12,6 @@ let id = 1;
 
 document.addEventListener("DOMContentLoaded", () => {
   // CHANGE TITLE //
-  const listTitle = document.getElementById("list-title");
   loadItemsFromLocalStorage();
   loadTitleFromLocalStorage();
 
@@ -44,29 +41,35 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// creating item//
+// Creating item //
 
 function createItem() {
   const formText = input.value;
   if (formText === "") {
     alert("Please add an item");
   } else {
-    addItem(formText, id);
-    saveItemToLocalStorage(formText, id);
+    addItem(formText, id, false); // false means the checkbox is initially not checked
+    saveItemToLocalStorage(formText, id, false);
     id += 1;
     input.value = ""; // Clear the input field after adding the item
   }
 }
 
-// ADD ITEM TO LIST//
+// Add item to list //
 
-function addItem(textValue, idValue) {
+function addItem(textValue, idValue, checked) {
   // Creating checkbox
   const checkbox = document.createElement("input");
   checkbox.setAttribute("type", "checkbox");
   checkbox.setAttribute("value", "");
-  checkbox.setAttribute("id", idValue);
+  checkbox.setAttribute("id", `checkbox-${idValue}`);
   checkbox.classList.add("form-check-input");
+  checkbox.checked = checked; // Set checkbox state
+
+  // Adding event listener to update local storage when checkbox state changes
+  checkbox.addEventListener("change", () => {
+    updateCheckedStateInLocalStorage(idValue, checkbox.checked);
+  });
 
   // Creating label for checkbox
   const label = document.createElement("label");
@@ -86,31 +89,31 @@ function addItem(textValue, idValue) {
   form.appendChild(div);
 }
 
-// SAVE ITEM TO LOCAL STORAGE //
+// Save item to local storage //
 
-function saveItemToLocalStorage(textValue, idValue) {
+function saveItemToLocalStorage(textValue, idValue, checked) {
   const items = JSON.parse(localStorage.getItem("todoItems")) || [];
-  items.push({ id: idValue, text: textValue });
+  items.push({ id: idValue, text: textValue, checked: checked });
   localStorage.setItem("todoItems", JSON.stringify(items));
 }
 
-// LOAD ITEMS FROM LOCAL STORAGE //
+// Load items from local storage //
 
 function loadItemsFromLocalStorage() {
   const items = JSON.parse(localStorage.getItem("todoItems")) || [];
   items.forEach((item) => {
-    addItem(item.text, item.id);
+    addItem(item.text, item.id, item.checked);
     id = Math.max(id, item.id + 1);
   });
 }
 
-// SAVE TITLE TO LOCAL STORAGE //
+// Save title to local storage //
 
 function saveTitleToLocalStorage(title) {
   localStorage.setItem("listTitle", title);
 }
 
-// LOAD TITLE FROM LOCAL STORAGE //
+// Load title from local storage //
 
 function loadTitleFromLocalStorage() {
   const savedTitle = localStorage.getItem("listTitle");
@@ -119,7 +122,18 @@ function loadTitleFromLocalStorage() {
   }
 }
 
-// BUTTON & ENTER ON INPUT //
+// Update checked state in local storage //
+
+function updateCheckedStateInLocalStorage(idValue, checked) {
+  const items = JSON.parse(localStorage.getItem("todoItems")) || [];
+  const itemIndex = items.findIndex((item) => item.id === idValue);
+  if (itemIndex > -1) {
+    items[itemIndex].checked = checked;
+    localStorage.setItem("todoItems", JSON.stringify(items));
+  }
+}
+
+// Button & enter on input //
 
 btn.addEventListener("click", createItem);
 input.addEventListener("keydown", function (event) {
@@ -129,7 +143,7 @@ input.addEventListener("keydown", function (event) {
   }
 });
 
-// CLEAR LIST //
+// Clear list //
 
 clearListBtn.addEventListener("click", clearList);
 
