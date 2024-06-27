@@ -6,6 +6,7 @@ const input = document.getElementById("input");
 const deleteItemsBtn = document.getElementById("delete-items");
 const clearListBtn = document.getElementById("clear-list");
 const customizeBtn = document.getElementById("customize");
+const listTitle = document.getElementById("list-title");
 
 // CREATE ITEM //
 
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // CHANGE TITLE //
   const listTitle = document.getElementById("list-title");
   loadItemsFromLocalStorage();
+  loadTitleFromLocalStorage();
 
   listTitle.addEventListener("dblclick", () => {
     const input = document.createElement("input");
@@ -29,16 +31,20 @@ document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("blur", () => {
       listTitle.textContent = input.value;
       input.replaceWith(listTitle);
+      saveTitleToLocalStorage(input.value);
     });
 
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         listTitle.textContent = input.value;
         input.replaceWith(listTitle);
+        saveTitleToLocalStorage(input.value);
       }
     });
   });
 });
+
+// creating item//
 
 function createItem() {
   const formText = input.value;
@@ -98,6 +104,21 @@ function loadItemsFromLocalStorage() {
   });
 }
 
+// SAVE TITLE TO LOCAL STORAGE //
+
+function saveTitleToLocalStorage(title) {
+  localStorage.setItem("listTitle", title);
+}
+
+// LOAD TITLE FROM LOCAL STORAGE //
+
+function loadTitleFromLocalStorage() {
+  const savedTitle = localStorage.getItem("listTitle");
+  if (savedTitle) {
+    listTitle.textContent = savedTitle;
+  }
+}
+
 // BUTTON & ENTER ON INPUT //
 
 btn.addEventListener("click", createItem);
@@ -114,6 +135,8 @@ clearListBtn.addEventListener("click", clearList);
 
 function clearList(e) {
   e.preventDefault();
-  form.innerHTML = "";
-  localStorage.removeItem("todoItems");
+  if (confirm("Are you sure?")) {
+    form.innerHTML = "";
+    localStorage.removeItem("todoItems");
+  }
 }
