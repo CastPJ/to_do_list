@@ -31,3 +31,7 @@ ul {
   object-fit: contain;
   vertical-align: top;
 }
+
+.strike-through {
+  text-decoration: line-through;
+}

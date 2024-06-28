@@ -219,6 +219,7 @@ function toggleDeleteMode(e) {
 
   const checkboxex = form.querySelectorAll(".form-check-input");
   const deleteButtons = form.querySelectorAll(".delete-button");
+  const labels = form.querySelectorAll(".form-check-label");
 
   checkboxex.forEach((checkbox) => {
     checkbox.style.display = deleteMode ? "none" : "inline";
@@ -227,4 +228,56 @@ function toggleDeleteMode(e) {
   deleteButtons.forEach((button) => {
     button.style.display = deleteMode ? "inline" : "none";
   });
+
+  labels.forEach((label) => {
+    if (deleteMode) {
+      label.addEventListener("click", editItem);
+      label.style.cursor = "pointer";
+    } else {
+      label.removeEventListener("click", editItem);
+      label.style.cursor = "default";
+    }
+  });
+}
+
+// Function to edit item on label click in delete mode
+function editItem(event) {
+  const label = event.target;
+  const id = label.getAttribute("for").replace("checkbox-", "");
+  const checkbox = document.getElementById(`checkbox-${id}`);
+
+  // Replace label with input field for editing
+  const input = document.createElement("input");
+  input.type = "text";
+  input.classList.add("form-control");
+  input.value = label.textContent;
+
+  label.replaceWith(input);
+  input.focus();
+
+  // Event listener to save changes on input blur
+  input.addEventListener("blur", () => {
+    label.textContent = input.value;
+    input.replaceWith(label);
+    updateItemTextInLocalStorage(id, input.value);
+  });
+
+  // Event listener to save changes on enter key press
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      label.textContent = input.value;
+      input.replaceWith(label);
+      updateItemTextInLocalStorage(id, input.value);
+    }
+  });
+}
+
+// Function to update item text in local storage
+function updateItemTextInLocalStorage(id, newText) {
+  const items = JSON.parse(localStorage.getItem("todoItems")) || [];
+  const itemIndex = items.findIndex((item) => item.id === parseInt(id));
+  if (itemIndex !== -1) {
+    items[itemIndex].text = newText;
+    localStorage.setItem("todoItems", JSON.stringify(items));
+  }
 }
