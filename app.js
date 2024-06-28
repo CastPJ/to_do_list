@@ -3,6 +3,7 @@
 const form = document.getElementById("form-check");
 const btn = document.getElementById("btn");
 const input = document.getElementById("input");
+const deleteItemsBtn = document.getElementById("delete-items");
 const clearListBtn = document.getElementById("clear-list");
 const deleteDoneBtn = document.getElementById("delete-done");
 const listTitle = document.getElementById("list-title");
@@ -10,6 +11,7 @@ const listTitle = document.getElementById("list-title");
 // CREATE ITEM //
 
 let id = 1;
+let deleteMode = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   // CHANGE TITLE //
@@ -78,12 +80,27 @@ function addItem(textValue, idValue, checked) {
   label.classList.add("form-check-label");
   label.textContent = textValue;
 
-  // Creating a wrapper div for better structure
+  // Creating a wrapper div
   const div = document.createElement("div");
   div.classList.add("form-check");
 
+  // Creating cross button
+  const deleteButton = document.createElement("button");
+  deleteButton.innerHTML = `<img src="images/X.svg" alt="X" />`;
+  deleteButton.classList.add("delete-button");
+  deleteButton.classList.add("btn");
+  deleteButton.classList.add("btn-danger");
+  deleteButton.classList.add("btn-x");
+  deleteButton.style.display = deleteMode ? "inline" : "none";
+
+  // Event listener to delete button
+  deleteButton.addEventListener("click", () => {
+    deleteItem(idValue);
+  });
+
   // Appending checkbox and label to the wrapper div
   div.appendChild(checkbox);
+  div.appendChild(deleteButton);
   div.appendChild(label);
 
   // Appending the wrapper div to the form
@@ -179,4 +196,35 @@ function deleteDone(e) {
     // Update local storage
     localStorage.setItem("todoItems", JSON.stringify(updatedItems));
   }
+}
+
+// Delete items & Delete mode
+
+function deleteItem(idValue) {
+  const checkbox = document.getElementById(`checkbox-${idValue}`);
+  if (checkbox) {
+    form.removeChild(checkbox.parentElement);
+  }
+
+  const items = JSON.parse(localStorage.getItem("todoItems")) || [];
+  const updatedItems = items.filter((item) => item.id !== idValue);
+  localStorage.setItem("todoItems", JSON.stringify(updatedItems));
+}
+
+deleteItemsBtn.addEventListener("click", toggleDeleteMode);
+
+function toggleDeleteMode(e) {
+  e.preventDefault();
+  deleteMode = !deleteMode;
+
+  const checkboxex = form.querySelectorAll(".form-check-input");
+  const deleteButtons = form.querySelectorAll(".delete-button");
+
+  checkboxex.forEach((checkbox) => {
+    checkbox.style.display = deleteMode ? "none" : "inline";
+  });
+
+  deleteButtons.forEach((button) => {
+    button.style.display = deleteMode ? "inline" : "none";
+  });
 }

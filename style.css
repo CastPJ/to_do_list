@@ -10,3 +10,24 @@ ul {
 .btn-group {
   margin-left: -1rem;
 }
+
+.btn-x {
+  border-radius: 4px;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin-left: -1.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 16px;
+}
+
+.btn-x img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  vertical-align: top;
+}
