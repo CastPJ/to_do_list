@@ -35,3 +35,9 @@ ul {
 .strike-through {
   text-decoration: line-through;
 }
+
+.slider {
+  max-height: 28rem;
+  overflow-y: auto;
+  margin-top: 1rem;
+}
