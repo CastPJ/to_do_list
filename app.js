@@ -15,6 +15,7 @@ let deleteMode = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   // CHANGE TITLE //
+
   loadItemsFromLocalStorage();
   loadTitleFromLocalStorage();
 
@@ -58,8 +59,7 @@ function createItem() {
   }
 }
 
-// Add item to list //
-
+// Add item to list
 function addItem(textValue, idValue, checked) {
   // Creating checkbox
   const checkbox = document.createElement("input");
@@ -69,9 +69,10 @@ function addItem(textValue, idValue, checked) {
   checkbox.classList.add("form-check-input");
   checkbox.checked = checked; // Set checkbox state
 
-  // Adding event listener to update local storage when checkbox state changes
+  // Adding event listener to update local storage and toggle strike-through when checkbox state changes
   checkbox.addEventListener("change", () => {
     updateCheckedStateInLocalStorage(idValue, checkbox.checked);
+    toggleStrikeThrough(checkbox, label);
   });
 
   // Creating label for checkbox
@@ -79,6 +80,11 @@ function addItem(textValue, idValue, checked) {
   label.setAttribute("for", `checkbox-${idValue}`);
   label.classList.add("form-check-label");
   label.textContent = textValue;
+
+  // Apply strike-through class if item is checked
+  if (checked) {
+    label.classList.add("strike-through");
+  }
 
   // Creating a wrapper div
   const div = document.createElement("div");
@@ -98,13 +104,22 @@ function addItem(textValue, idValue, checked) {
     deleteItem(idValue);
   });
 
-  // Appending checkbox and label to the wrapper div
+  // Appending checkbox, delete button, and label to the wrapper div
   div.appendChild(checkbox);
   div.appendChild(deleteButton);
   div.appendChild(label);
 
   // Appending the wrapper div to the form
   form.appendChild(div);
+}
+
+// Toggle strike-through class
+function toggleStrikeThrough(checkbox, label) {
+  if (checkbox.checked) {
+    label.classList.add("strike-through");
+  } else {
+    label.classList.remove("strike-through");
+  }
 }
 
 // Save item to local storage //
@@ -164,7 +179,6 @@ input.addEventListener("keydown", function (event) {
 // Clear list //
 
 clearListBtn.addEventListener("click", clearList);
-
 function clearList(e) {
   e.preventDefault();
   if (confirm("Are you sure?")) {
@@ -194,6 +208,7 @@ function deleteDone(e) {
     });
 
     // Update local storage
+
     localStorage.setItem("todoItems", JSON.stringify(updatedItems));
   }
 }
